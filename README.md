@@ -1,9 +1,9 @@
 # 17 x 9 Tetris
 Tetris! But on a 17 x 9 grid, what an odd choice... 
 
-This game was put together in a relatively short amount of time to hit a deadline for this project. It works decently and is still fun to play, but I think there is still room for improvement both aesthetically and in terms of gameplay. Anything in the `tetris.py` and `input_manager.py` file can be changed without impactig the overall functionality of the system. Things in the other utilities can be changed as well, but this will require restructuring other things and is not the prefered method of improving the game. However, if there is a significant improvement by restructuring those systems, go for it and make a pull request!
+This game was put together in a relatively short amount of time to hit a deadline for this project. It works decently and is still fun to play, but I think there is still room for improvement both aesthetically and in terms of gameplay. Anything in the `tetris.py` and `input_manager.py` file can be changed without impacting the overall functionality of the system. Things in the other utilities can be changed as well, but this will require restructuring other parts of the system and is not the prefered method of improving the game. However, if there is a significant improvement by restructuring those systems, go for it and make a pull request!
 
-I'm hoping that by making this public, people can play around with it, see how the system works, and overall improve the whole system!
+I'm hoping that by making this public, people can play around with it, see how the system works, and overall improve the whole system! Maybe you'll even be inspired to make your own game for this kind of display! (Please feel free to do this as well! You can just reuse the display and dummy classes)
 
 ## Things that need to be fixed
 - Inputs are handled after game over, impacting the next game
