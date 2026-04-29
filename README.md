@@ -22,6 +22,10 @@ I'm hoping that by making this public, people can play around with it, see how t
 - Pausing the game
 - More to be added as I think of them...
 
+## Other notes
+- If you forked this repo before the most recent commit to fix the bug with the `_playing` variable not being initialized, you will have to pull again
+- The `Display.send()` function should be called *at most* at 30 FPS (i.e. Once every 0.033 seconds). The send command might get smarter at some point to handle faster send commands, but currently it is up to the game to limit the frame rate
+
 Feel free to add any other features that you think would be useful even if they're not listed here! Just make a PR :)
 
 Disclaimer: *This is a personal educational project and is not affiliated with, sponsored by, or endorsed by The Tetris Company*
