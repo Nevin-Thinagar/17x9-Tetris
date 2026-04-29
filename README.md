@@ -23,3 +23,5 @@ I'm hoping that by making this public, people can play around with it, see how t
 - More to be added as I think of them...
 
 Feel free to add any other features that you think would be useful even if they're not listed here! Just make a PR :)
+
+Disclaimer: *This is a personal educational project and is not affiliated with, sponsored by, or endorsed by The Tetris Company*
