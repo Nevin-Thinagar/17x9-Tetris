@@ -666,6 +666,7 @@ class Tetris:
         self._180available = True
         self._hardDropAvailable = True
         self._DCDCounter = self._DCD
+        self._playing = True
 
 if __name__ == "__main__":
     tetris = Tetris()
