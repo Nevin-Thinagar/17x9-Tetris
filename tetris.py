@@ -349,6 +349,7 @@ class Tetris:
 
         self._ghostPiece = ghostPiece
         self._inputManager = InputManager(KEYBINDS)
+        self._highScore = 0
 
         pygame.key.set_repeat(NS_PER_FRAME // 1_000_000 * HANDLING["DAS"], NS_PER_FRAME // 1_000_000 * HANDLING["ARR"])
 
@@ -636,7 +637,8 @@ class Tetris:
 
     def _gameOver(self):
         '''Print score and reset game.'''
-        print(f"Level: {self._level}, Lines Cleared: {self._linesCleared}, Score: {self.score}")
+        self._highScore = max(self._highScore, self.score)
+        print(f"Level: {self._level}, Lines Cleared: {self._linesCleared}, Score: {self.score}, High Score: {self._highScore}")
         self._fillUp()
 
         self._fallDown()
