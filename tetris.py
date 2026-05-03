@@ -197,6 +197,75 @@ GRAVITY = [1/48, 1/43, 1/38, 1/33, 1/28, 1/23, 1/18, 1/13, 1/8, 1/6,
            1/5, 1/5, 1/5, 1/4, 1/4, 1/4, 1/3, 1/3, 1/3, 1/2,
            1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1]
 
+# Countdown at the start of the game
+COUNTDOWN = {
+    "3": np.array([
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,X,X,X,W,W,X,X],
+        [X,X,X,X,X,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,X,X,X,W,W,X,X],
+        [X,X,X,X,X,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+    ]),
+
+    "2": np.array([
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,X,X,X,W,W,X,X],
+        [X,X,X,X,X,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,X,X,X,X,X],
+        [X,X,W,W,X,X,X,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,W,W,W,W,W,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+    ]),
+
+    "1": np.array([
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,W,W,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+        [X,X,X,X,X,X,X,X,X],
+    ]),
+}
+
 class Tetromino:
     """Represents a Tetromino piece in the game."""
     def __init__(self, shape):
@@ -339,6 +408,8 @@ class Tetris:
         self._foreground = Frame(rows=self._displayFrame.nrows()+3, cols=self._displayFrame.ncols()+2)
 
         self._DCD = HANDLING["DCD"]
+        
+        self._doCountdown()
         self._resetGame()
 
         # Set subtick processing rate
@@ -651,7 +722,17 @@ class Tetris:
 
         self._foreground = Frame(rows=self._displayFrame.nrows()+3, cols=self._displayFrame.ncols()+2)
 
+        self._doCountdown()
         self._resetGame()
+
+    def _doCountdown(self):
+        for count in ("3", "2", "1"):
+            f1 = Frame()
+            f1._array = COUNTDOWN[count]
+            self._display.send(f1)
+            time.sleep(1)
+
+        self._display.send(Frame())
 
     def _resetGame(self):
         self._bag = Bag()
