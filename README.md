@@ -1,5 +1,5 @@
 # 17 x 9 Tetris
-Tetris! But on a 17 x 9 grid, what an odd choice... 
+Tetris! But on a 17 x 9 grid, what an odd choice...
 
 This game was put together in a relatively short amount of time to hit a deadline for this project. It works decently and is still fun to play, but I think there is still room for improvement both aesthetically and in terms of gameplay. Anything in the `tetris.py` and `input_manager.py` file can be changed without impacting the overall functionality of the system. Things in the other utilities can be changed as well, but this will require restructuring other parts of the system and is not the prefered method of improving the game. However, if there is a significant improvement by restructuring those systems, go for it and make a pull request!
 
@@ -17,9 +17,9 @@ I'm hoping that by making this public, people can play around with it, see how t
 - Color change on level up
 - Second window with next pieces, hold piece, score, level, and timer
 - More accurate scoring
-- High score tracking
-- Countdown before game start
+- High score tracking (partially implemented, needs visual on second window)
 - Pausing the game
+- Scroll score after game over
 - More to be added as I think of them...
 
 ## Other notes
