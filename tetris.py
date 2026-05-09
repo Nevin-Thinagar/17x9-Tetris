@@ -3,6 +3,8 @@ import pygame
 import numpy as np
 import time
 import keyboard
+import tkinter as tk
+import threading
 
 from utilities.input_manager import InputManager
 from utilities.display import Color, Frame
@@ -358,6 +360,11 @@ class Bag:
         self._index += 1
         return Tetromino(shape)
 
+GLOBAL_STATE = {
+    "HIGH_SCORE": 0,
+    "CURRENT_SCORE": 0,
+}
+
 class Tetris:
     def __init__(self, display=None, modern=True, ghostPiece=True):
         # Defining standard keybinds
@@ -641,6 +648,8 @@ class Tetris:
 
     def _checkForClears(self, rows: list[int] = [1,18]):
         '''Check for and clear any completed lines.'''
+        global GLOBAL_STATE
+
         clear = False
         for i in range(rows[0], rows[1]):
             if all(self._background.row(i)[j] != X for j in range(1, self._background.ncols()-1)):
@@ -665,6 +674,7 @@ class Tetris:
                         self._background.row(1)[j] = X
                     self._linesCleared += 1
                     self.score += 100 * (self._linesCleared // 10 + 1)
+            GLOBAL_STATE["CURRENT_SCORE"] = self.score
 
     def _checkLevelUp(self):
         '''Check if the player has leveled up and increase gravity if so.'''
@@ -708,7 +718,10 @@ class Tetris:
 
     def _gameOver(self):
         '''Print score and reset game.'''
+        global GLOBAL_STATE
+
         self._highScore = max(self._highScore, self.score)
+        GLOBAL_STATE["HIGH_SCORE"] = self._highScore
         print(f"Level: {self._level}, Lines Cleared: {self._linesCleared}, Score: {self.score}, High Score: {self._highScore}")
         self._fillUp()
 
@@ -735,6 +748,10 @@ class Tetris:
         self._display.send(Frame())
 
     def _resetGame(self):
+        global GLOBAL_STATE
+        GLOBAL_STATE["CURRENT_SCORE"] = 0
+
+        pygame.event.clear()
         self._bag = Bag()
         self._activeTetromino = self._bag.getTetromino()
         self._holdTetromino = None
@@ -751,6 +768,30 @@ class Tetris:
         self._DCDCounter = self._DCD
         self._playing = True
 
+def second_screen():
+    global GLOBAL_STATE 
+
+    root = tk.Tk()
+    root.title("Tetris")
+    root.geometry("400x300")
+    root.configure(bg="black")
+
+    label_high_score = tk.Label(root, text="0", font=("Arial", 24))
+    label_high_score.pack(padx=20, pady=20)
+
+    label_score = tk.Label(root, text="0", font=("Arial", 24))
+    label_score.pack(padx=20, pady=20)
+
+    def update_label():
+        label_high_score.config(text=f"High Score: {GLOBAL_STATE['HIGH_SCORE']}")
+        label_score.config(text=f"Score: {GLOBAL_STATE['CURRENT_SCORE']}")
+        root.after(100, update_label)
+
+    root.after(100, update_label)
+    root.mainloop()
+
 if __name__ == "__main__":
+    threading.Thread(target=second_screen, daemon=True).start()
+
     tetris = Tetris()
     tetris.play()
