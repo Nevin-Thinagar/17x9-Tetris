@@ -735,6 +735,7 @@ class Tetris:
         self._display.send(Frame())
 
     def _resetGame(self):
+        pygame.event.clear()
         self._bag = Bag()
         self._activeTetromino = self._bag.getTetromino()
         self._holdTetromino = None
