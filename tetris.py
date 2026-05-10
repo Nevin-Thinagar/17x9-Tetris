@@ -416,7 +416,7 @@ class Tetris:
         self._foreground = Frame(rows=self._displayFrame.nrows()+3, cols=self._displayFrame.ncols()+2)
 
         self._DCD = HANDLING["DCD"]
-
+        
         self._doCountdown()
         self._resetGame()
 
@@ -755,7 +755,7 @@ class Tetris:
     def _resetGlobal(self):
         global GLOBAL_STATE
         GLOBAL_STATE["CURRENT_SCORE"] = 0
-        GLOBAL_STATE["HOLD_PIECE"] = None
+        GLOBAL_STATE["HOLD_PIECE"] = None 
 
     def _resetGame(self):
         pygame.event.clear()
@@ -777,7 +777,7 @@ class Tetris:
         self._playing = True
 
 def second_screen():
-    global GLOBAL_STATE
+    global GLOBAL_STATE 
 
     root = tk.Tk()
     root.title("Tetris")
