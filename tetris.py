@@ -3,6 +3,8 @@ import pygame
 import numpy as np
 import time
 import keyboard
+import tkinter as tk
+import threading
 
 from utilities.input_manager import InputManager
 from utilities.display import Color, Frame
@@ -358,6 +360,12 @@ class Bag:
         self._index += 1
         return Tetromino(shape)
 
+GLOBAL_STATE = {
+    "HIGH_SCORE": 0,
+    "CURRENT_SCORE": 0,
+    "HOLD_PIECE": None,
+}
+
 class Tetris:
     def __init__(self, display=None, modern=True, ghostPiece=True):
         # Defining standard keybinds
@@ -628,6 +636,8 @@ class Tetris:
 
     def _hold(self, eventDown):
         '''Hold the active Tetromino.'''
+        global GLOBAL_STATE
+
         if not self._holdAvailable:
             return
         if eventDown:
@@ -636,11 +646,14 @@ class Tetris:
                 self._activeTetromino = self._bag.getTetromino()
             else:
                 self._holdTetromino, self._activeTetromino = self._activeTetromino, self._holdTetromino
+            GLOBAL_STATE["HOLD_PIECE"] = self._holdTetromino
             self._holdTetromino.setPosition([0, 3])
             self._holdAvailable = False
 
     def _checkForClears(self, rows: list[int] = [1,18]):
         '''Check for and clear any completed lines.'''
+        global GLOBAL_STATE
+
         clear = False
         for i in range(rows[0], rows[1]):
             if all(self._background.row(i)[j] != X for j in range(1, self._background.ncols()-1)):
@@ -665,6 +678,7 @@ class Tetris:
                         self._background.row(1)[j] = X
                     self._linesCleared += 1
                     self.score += 100 * (self._linesCleared // 10 + 1)
+            GLOBAL_STATE["CURRENT_SCORE"] = self.score
 
     def _checkLevelUp(self):
         '''Check if the player has leveled up and increase gravity if so.'''
@@ -708,7 +722,10 @@ class Tetris:
 
     def _gameOver(self):
         '''Print score and reset game.'''
+        global GLOBAL_STATE
+
         self._highScore = max(self._highScore, self.score)
+        GLOBAL_STATE["HIGH_SCORE"] = self._highScore
         print(f"Level: {self._level}, Lines Cleared: {self._linesCleared}, Score: {self.score}, High Score: {self._highScore}")
         self._fillUp()
 
@@ -722,6 +739,7 @@ class Tetris:
 
         self._foreground = Frame(rows=self._displayFrame.nrows()+3, cols=self._displayFrame.ncols()+2)
 
+        self._resetGlobal()
         self._doCountdown()
         self._resetGame()
 
@@ -734,8 +752,14 @@ class Tetris:
 
         self._display.send(Frame())
 
+    def _resetGlobal(self):
+        global GLOBAL_STATE
+        GLOBAL_STATE["CURRENT_SCORE"] = 0
+        GLOBAL_STATE["HOLD_PIECE"] = None 
+
     def _resetGame(self):
         pygame.event.clear()
+        self._resetGlobal()
         self._bag = Bag()
         self._activeTetromino = self._bag.getTetromino()
         self._holdTetromino = None
@@ -752,6 +776,65 @@ class Tetris:
         self._DCDCounter = self._DCD
         self._playing = True
 
+def second_screen():
+    global GLOBAL_STATE 
+
+    root = tk.Tk()
+    root.title("Tetris")
+    root.geometry("500x600")
+    root.configure(bg="black")
+
+    label_score = tk.Label(root, text="0", font=("Arial", 24))
+    label_score.pack(padx=20, pady=20)
+
+    cell_size = 100
+    canvas_size = 4*cell_size
+    canvas = tk.Canvas(root, width=canvas_size, height=canvas_size, bg="black", highlightthickness=0)
+    cells = dict()
+    colors = dict()
+    canvas.pack(padx=8, pady=8)
+
+    label_high_score = tk.Label(root, text="0", font=("Arial", 24))
+    label_high_score.pack(padx=20, pady=20)
+
+    def empty_canvas():
+        for r in range(4):
+            for c in range(4):
+                x0 = c*cell_size
+                y0 = r*cell_size
+                rect = canvas.create_rectangle(x0,y0,x0+cell_size,y0+cell_size, fill="black")
+                cells[(r,c)] = rect
+                colors[(r,c)] = "black"
+
+    def update_canvas(hold_piece):
+        piece_colors = hold_piece.getState()
+        for r in range(4):
+            for c in range(4):
+                col = piece_colors[r][c]
+                x0 = c*cell_size
+                y0 = r*cell_size
+                colors[(r,c)] = f"#{col.r:02x}{col.g:02x}{col.b:02x}"
+                canvas.itemconfigure(cells[(r,c)], fill=colors[(r, c)])
+
+    empty_canvas()
+
+    def update_label():
+        label_high_score.config(text=f"High Score: {GLOBAL_STATE['HIGH_SCORE']}")
+        label_score.config(text=f"Score: {GLOBAL_STATE['CURRENT_SCORE']}")
+        if GLOBAL_STATE["HOLD_PIECE"] is not None:
+            # breakpoint()
+            update_canvas(GLOBAL_STATE["HOLD_PIECE"])
+        else:
+            empty_canvas()
+
+
+        root.after(100, update_label)
+
+    root.after(100, update_label)
+    root.mainloop()
+
 if __name__ == "__main__":
+    threading.Thread(target=second_screen, daemon=True).start()
+
     tetris = Tetris()
     tetris.play()
