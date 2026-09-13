@@ -12,11 +12,12 @@ from games.mario import Mario
 from games.spacewar import Spacewar
 from games.ripple import Ripple
 from games.sundai import Sundai
+from games.mit import MIT
 from games.electro import Electro
 
-#: The attract-mode rotation, in order. Ripple winds down out of the games and
-#: the Sundai logo closes every pass.
-GAMES = [Pong, Dino, PacMan, Mario, Spacewar, Ripple, Sundai]
+#: The attract-mode rotation, in order. Ripple winds down out of the games,
+#: then the Sundai logo and the MIT wordmark close every pass.
+GAMES = [Pong, Dino, PacMan, Mario, Spacewar, Ripple, Sundai, MIT]
 
 #: Built but not in rotation. Still selectable with `arcade.py --game <name>`.
 EXTRAS = [Electro]
@@ -33,6 +34,7 @@ __all__ = [
     "Spacewar",
     "Ripple",
     "Sundai",
+    "MIT",
     "Electro",
     "GAMES",
     "EXTRAS",

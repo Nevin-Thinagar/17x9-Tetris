@@ -8,9 +8,10 @@ I'm hoping that by making this public, people can play around with it, see how t
 ## Arcade loop
 
 `arcade.py` runs an attract-mode loop on the same 17 x 9 display: Atari Pong,
-the Chrome dinosaur, Pac-Man, a Mario-style platformer and Spacewar!, closing
-each pass with the Sundai logo. Nothing reads input — each segment drives
-itself, so the loop can run unattended on the facade or the simulator.
+the Chrome dinosaur, Pac-Man, a Mario-style platformer and Spacewar!, then a
+colour-ripple wind-down, closing each pass with the Sundai logo and the MIT
+wordmark. Nothing reads input — each segment drives itself, so the loop can run
+unattended on the facade or the simulator.
 
 ```
 python arcade.py                   # loop all four in the pygame window
@@ -45,10 +46,17 @@ clip the hue is gone — so channels above a knee are rolled off instead, which
 keeps a hot overlap recognisably pink or cyan. It is the most expensive segment
 at 0.7 ms/frame, still around 2% of the frame budget.
 
-`sundai` is the outro rather than a game: the logo wipes in from the base, the
-brand gradient drifts across the glass, then it fades. The artwork and its seven
-gradient stops are taken from the simulator's own `sundai-reveal` demo frames,
-so it matches the brand exactly rather than approximating it.
+`sundai` and `mit` are the outro rather than games. The Sundai logo wipes in
+from the base, the brand gradient drifts across the glass, then it fades; the
+artwork and its seven gradient stops are taken from the simulator's own
+`sundai-reveal` demo frames, so it matches the brand exactly rather than
+approximating it. The MIT logo follows, shown whole and still. Its five bars
+need one-column gaps to stay distinct, which comes to exactly nine columns —
+sampled any smaller the bars merge into a solid block, any larger and it no
+longer fits — so the mark lands on the display's width exactly and needs only
+six of its seventeen rows. The bitmap was sampled from the official logo on
+brand.mit.edu and is shared with `utilities/mit_logo.py`, which offers the same
+logo as a startup screen for `tetris.py` via `show_mit_logo(display)`.
 
 `games/electro.py` is built but held out of the rotation — `GAMES` is the loop,
 `EXTRAS` is everything else, and `--game <name>` can still run either.
