@@ -384,6 +384,12 @@ class Tetromino:
         self._lockDelay = 30
         return (oldRotation, self._rotation)
 
+    def resetRotation(self):
+        oldRotation = self._rotation
+        self._rotation = 0
+        self._lockDelay = 30
+        return (oldRotation, self._rotation)
+    
     def moveLeft(self):
         self._position[1] -= 1
         self._lockDelay = 30
@@ -735,6 +741,7 @@ class Tetris:
                 self._holdTetromino, self._activeTetromino = self._activeTetromino, self._holdTetromino
             GLOBAL_STATE["HOLD_PIECE"] = self._holdTetromino
             self._holdTetromino.setPosition([0, 3])
+            self._holdTetromino.resetRotation() # hold piece should have default rotation
             self._holdAvailable = False
 
     def _checkForClears(self, rows: list[int] = [1,18]):
